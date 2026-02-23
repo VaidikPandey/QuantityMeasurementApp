@@ -3,61 +3,101 @@ package com.QuantityMeasurementApp;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
-class QuantityLengthTest {
+class QuantityLengthUC4Test {
 
     @Test
-    void testFeetToFeet_SameValue() {
+    void testYardToYard_SameValue() {
         // Same unit, same value
-        QuantityLength q1 = new QuantityLength(1.0, LengthUnit.FEET);
-        QuantityLength q2 = new QuantityLength(1.0, LengthUnit.FEET);
+        QuantityLength q1 = new QuantityLength(1.0, LengthUnit.YARDS);
+        QuantityLength q2 = new QuantityLength(1.0, LengthUnit.YARDS);
         assertEquals(q1, q2);
     }
 
     @Test
-    void testInchToInch_SameValue() {
-        // Same unit, same value
-        QuantityLength q1 = new QuantityLength(1.0, LengthUnit.INCH);
-        QuantityLength q2 = new QuantityLength(1.0, LengthUnit.INCH);
-        assertEquals(q1, q2);
+    void testYardToYard_DifferentValue() {
+        // Same unit, different values
+        QuantityLength q1 = new QuantityLength(1.0, LengthUnit.YARDS);
+        QuantityLength q2 = new QuantityLength(2.0, LengthUnit.YARDS);
+        assertNotEquals(q1, q2);
     }
 
     @Test
-    void testFeetToInch_EquivalentValue() {
-        // Cross-unit equivalent (1 ft = 12 in)
-        QuantityLength feet = new QuantityLength(1.0, LengthUnit.FEET);
-        QuantityLength inch = new QuantityLength(12.0, LengthUnit.INCH);
-        assertEquals(feet, inch);
+    void testYardToFeet_Equivalent() {
+        // 1 yard = 3 feet
+        QuantityLength yard = new QuantityLength(1.0, LengthUnit.YARDS);
+        QuantityLength feet = new QuantityLength(3.0, LengthUnit.FEET);
+        assertEquals(yard, feet);
     }
 
     @Test
-    void testInchToFeet_EquivalentValue() {
+    void testFeetToYard_Equivalent() {
         // Symmetry check
-        QuantityLength inch = new QuantityLength(12.0, LengthUnit.INCH);
+        QuantityLength feet = new QuantityLength(3.0, LengthUnit.FEET);
+        QuantityLength yard = new QuantityLength(1.0, LengthUnit.YARDS);
+        assertEquals(feet, yard);
+    }
+
+    @Test
+    void testYardToInch_Equivalent() {
+        // 1 yard = 36 inches
+        QuantityLength yard = new QuantityLength(1.0, LengthUnit.YARDS);
+        QuantityLength inch = new QuantityLength(36.0, LengthUnit.INCH);
+        assertEquals(yard, inch);
+    }
+
+    @Test
+    void testCentimeterToCentimeter_SameValue() {
+        // Same unit
+        QuantityLength c1 = new QuantityLength(2.0, LengthUnit.CENTIMETER);
+        QuantityLength c2 = new QuantityLength(2.0, LengthUnit.CENTIMETER);
+        assertEquals(c1, c2);
+    }
+
+    @Test
+    void testCentimeterToInch_Equivalent() {
+        // 1 cm = 0.393701 inch
+        QuantityLength cm = new QuantityLength(1.0, LengthUnit.CENTIMETER);
+        QuantityLength inch = new QuantityLength(0.393701, LengthUnit.INCH);
+        assertEquals(cm, inch);
+    }
+
+    @Test
+    void testCentimeterToFeet_NotEquivalent() {
+        // 1 cm != 1 foot
+        QuantityLength cm = new QuantityLength(1.0, LengthUnit.CENTIMETER);
         QuantityLength feet = new QuantityLength(1.0, LengthUnit.FEET);
-        assertEquals(inch, feet);
+        assertNotEquals(cm, feet);
     }
 
     @Test
-    void testFeetToFeet_DifferentValue() {
-        // Same unit, different values
-        QuantityLength q1 = new QuantityLength(1.0, LengthUnit.FEET);
-        QuantityLength q2 = new QuantityLength(2.0, LengthUnit.FEET);
-        assertNotEquals(q1, q2);
+    void testMultiUnit_TransitiveProperty() {
+        // 1 yard = 3 feet = 36 inches
+        QuantityLength yard = new QuantityLength(1.0, LengthUnit.YARDS);
+        QuantityLength feet = new QuantityLength(3.0, LengthUnit.FEET);
+        QuantityLength inch = new QuantityLength(36.0, LengthUnit.INCH);
+
+        assertEquals(yard, feet);
+        assertEquals(feet, inch);
+        assertEquals(yard, inch);
     }
 
     @Test
-    void testInchToInch_DifferentValue() {
-        // Same unit, different values
-        QuantityLength q1 = new QuantityLength(1.0, LengthUnit.INCH);
-        QuantityLength q2 = new QuantityLength(2.0, LengthUnit.INCH);
-        assertNotEquals(q1, q2);
+    void testComplexScenario_AllUnits() {
+        // 2 yards = 6 feet = 72 inches
+        QuantityLength yard = new QuantityLength(2.0, LengthUnit.YARDS);
+        QuantityLength feet = new QuantityLength(6.0, LengthUnit.FEET);
+        QuantityLength inch = new QuantityLength(72.0, LengthUnit.INCH);
+
+        assertEquals(yard, feet);
+        assertEquals(feet, inch);
+        assertEquals(yard, inch);
     }
 
     @Test
     void testNullComparison() {
-        // Object should not equal null
-        QuantityLength q1 = new QuantityLength(1.0, LengthUnit.FEET);
-        assertNotEquals(q1, null);
+        // Should not equal null
+        QuantityLength yard = new QuantityLength(1.0, LengthUnit.YARDS);
+        assertNotEquals(yard, null);
     }
 
     @Test
@@ -70,46 +110,17 @@ class QuantityLengthTest {
     @Test
     void testSameReference() {
         // Reflexive property
-        QuantityLength q1 = new QuantityLength(1.0, LengthUnit.FEET);
-        assertEquals(q1, q1);
-    }
-
-    @Test
-    void testSymmetry() {
-        // If A equals B, then B equals A
-        QuantityLength q1 = new QuantityLength(1.0, LengthUnit.FEET);
-        QuantityLength q2 = new QuantityLength(12.0, LengthUnit.INCH);
-        assertTrue(q1.equals(q2));
-        assertTrue(q2.equals(q1));
-    }
-
-    @Test
-    void testTransitivity() {
-        // If A = B and B = C, then A = C
-        QuantityLength q1 = new QuantityLength(1.0, LengthUnit.FEET);
-        QuantityLength q2 = new QuantityLength(12.0, LengthUnit.INCH);
-        QuantityLength q3 = new QuantityLength(1.0, LengthUnit.FEET);
-        assertEquals(q1, q2);
-        assertEquals(q2, q3);
-        assertEquals(q1, q3);
-    }
-
-    @Test
-    void testConsistency() {
-        // Multiple calls should return same result
-        QuantityLength q1 = new QuantityLength(1.0, LengthUnit.FEET);
-        QuantityLength q2 = new QuantityLength(12.0, LengthUnit.INCH);
-        assertTrue(q1.equals(q2));
-        assertTrue(q1.equals(q2));
-        assertTrue(q1.equals(q2));
+        QuantityLength yard = new QuantityLength(1.0, LengthUnit.YARDS);
+        assertEquals(yard, yard);
     }
 
     @Test
     void testHashCode_EqualObjects() {
         // Equal objects must have same hashCode
-        QuantityLength q1 = new QuantityLength(1.0, LengthUnit.FEET);
-        QuantityLength q2 = new QuantityLength(12.0, LengthUnit.INCH);
-        assertEquals(q1, q2);
-        assertEquals(q1.hashCode(), q2.hashCode());
+        QuantityLength yard = new QuantityLength(1.0, LengthUnit.YARDS);
+        QuantityLength feet = new QuantityLength(3.0, LengthUnit.FEET);
+
+        assertEquals(yard, feet);
+        assertEquals(yard.hashCode(), feet.hashCode());
     }
 }
