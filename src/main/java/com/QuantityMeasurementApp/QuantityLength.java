@@ -22,32 +22,12 @@ public final class QuantityLength {
         return unit;
     }
 
-    // Static convert (from UC5)
-    public static double convert(double value, LengthUnit source, LengthUnit target) {
-        validate(value, source);
-        validate(value, target);
-
-        double valueInFeet = source.toFeet(value);
-        return target.fromFeet(valueInFeet);
-    }
-
-    // Addition (UC6)
-    // Instance method: result in unit of first operand
+    // UC6: Implicit target (first operand unit)
     public QuantityLength add(QuantityLength other) {
-        if (other == null)
-            throw new IllegalArgumentException("Second operand cannot be null");
-
-        double thisInFeet = this.unit.toFeet(this.value);
-        double otherInFeet = other.unit.toFeet(other.value);
-
-        double sumInFeet = thisInFeet + otherInFeet;
-
-        double resultValue = this.unit.fromFeet(sumInFeet);
-
-        return new QuantityLength(resultValue, this.unit);
+        return add(this, other, this.unit);
     }
-
-    // Static overloaded version with explicit target unit
+    
+    // UC7: Explicit target unit
     public static QuantityLength add(
             QuantityLength a,
             QuantityLength b,
@@ -56,9 +36,11 @@ public final class QuantityLength {
         if (a == null || b == null)
             throw new IllegalArgumentException("Operands cannot be null");
 
+        if (targetUnit == null)
+            throw new IllegalArgumentException("Target unit cannot be null");
+
         validate(a.value, a.unit);
         validate(b.value, b.unit);
-        validate(0.0, targetUnit); // unit validation
 
         double aInFeet = a.unit.toFeet(a.value);
         double bInFeet = b.unit.toFeet(b.value);
