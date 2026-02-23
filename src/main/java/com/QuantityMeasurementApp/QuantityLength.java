@@ -22,7 +22,7 @@ public final class QuantityLength {
         return unit;
     }
 
-    // Static conversion API
+    // Static convert (from UC5)
     public static double convert(double value, LengthUnit source, LengthUnit target) {
         validate(value, source);
         validate(value, target);
@@ -31,10 +31,42 @@ public final class QuantityLength {
         return target.fromFeet(valueInFeet);
     }
 
-    // Instance conversion method (returns new immutable object)
-    public QuantityLength convertTo(LengthUnit targetUnit) {
-        double convertedValue = convert(this.value, this.unit, targetUnit);
-        return new QuantityLength(convertedValue, targetUnit);
+    // Addition (UC6)
+    // Instance method: result in unit of first operand
+    public QuantityLength add(QuantityLength other) {
+        if (other == null)
+            throw new IllegalArgumentException("Second operand cannot be null");
+
+        double thisInFeet = this.unit.toFeet(this.value);
+        double otherInFeet = other.unit.toFeet(other.value);
+
+        double sumInFeet = thisInFeet + otherInFeet;
+
+        double resultValue = this.unit.fromFeet(sumInFeet);
+
+        return new QuantityLength(resultValue, this.unit);
+    }
+
+    // Static overloaded version with explicit target unit
+    public static QuantityLength add(
+            QuantityLength a,
+            QuantityLength b,
+            LengthUnit targetUnit) {
+
+        if (a == null || b == null)
+            throw new IllegalArgumentException("Operands cannot be null");
+
+        validate(a.value, a.unit);
+        validate(b.value, b.unit);
+        validate(0.0, targetUnit); // unit validation
+
+        double aInFeet = a.unit.toFeet(a.value);
+        double bInFeet = b.unit.toFeet(b.value);
+
+        double sumInFeet = aInFeet + bInFeet;
+        double resultValue = targetUnit.fromFeet(sumInFeet);
+
+        return new QuantityLength(resultValue, targetUnit);
     }
 
     private static void validate(double value, LengthUnit unit) {
