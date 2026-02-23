@@ -1,42 +1,39 @@
+package com.QuantityMeasurementApp;
+
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 class QuantityMeasurementAppTest {
 
     @Test
-    void testEquality_SameValue() {
-        QuantityMeasurementApp.Feet first = new QuantityMeasurementApp.Feet(1.0);
-        QuantityMeasurementApp.Feet second = new QuantityMeasurementApp.Feet(1.0);
-
-        assertTrue(first.equals(second), "1.0 ft should be equal to 1.0 ft");
+    void testFeetEquality_SameValue() {
+        assertTrue(QuantityMeasurementApp.checkFeetEquality(1.0, 1.0));
     }
 
     @Test
-    void testEquality_DifferentValue() {
-        QuantityMeasurementApp.Feet first = new QuantityMeasurementApp.Feet(1.0);
-        QuantityMeasurementApp.Feet second = new QuantityMeasurementApp.Feet(2.0);
-
-        assertFalse(first.equals(second), "1.0 ft should not be equal to 2.0 ft");
+    void testFeetEquality_DifferentValue() {
+        assertFalse(QuantityMeasurementApp.checkFeetEquality(1.0, 2.0));
     }
 
     @Test
-    void testEquality_NullComparison() {
-        QuantityMeasurementApp.Feet first = new QuantityMeasurementApp.Feet(1.0);
-
-        assertFalse(first.equals(null), "Value should not be equal to null");
+    void testInchesEquality_SameValue() {
+        assertTrue(QuantityMeasurementApp.checkInchesEquality(1.0, 1.0));
     }
 
     @Test
-    void testEquality_SameReference() {
-        QuantityMeasurementApp.Feet first = new QuantityMeasurementApp.Feet(1.0);
-
-        assertTrue(first.equals(first), "Object must be equal to itself");
+    void testInchesEquality_DifferentValue() {
+        assertFalse(QuantityMeasurementApp.checkInchesEquality(1.0, 2.0));
     }
 
     @Test
-    void testEquality_DifferentType() {
-        QuantityMeasurementApp.Feet first = new QuantityMeasurementApp.Feet(1.0);
+    void testFeetNullComparison() {
+        QuantityMeasurementApp.Feet feet = new QuantityMeasurementApp.Feet(1.0);
+        assertFalse(feet.equals(null));
+    }
 
-        assertFalse(first.equals("1.0"), "Feet should not be equal to a String");
+    @Test
+    void testInchesSameReference() {
+        QuantityMeasurementApp.Inches inch = new QuantityMeasurementApp.Inches(1.0);
+        assertTrue(inch.equals(inch));
     }
 }
