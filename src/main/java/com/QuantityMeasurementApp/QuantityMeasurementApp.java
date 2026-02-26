@@ -2,13 +2,17 @@ package com.QuantityMeasurementApp;
 
 public class QuantityMeasurementApp {
 
-    public static void main(String[] args) {
+	public static void main(String[] args) {
 
-        QuantityLength q1 = new QuantityLength(1.0, LengthUnit.FEET);
-        QuantityLength q2 = new QuantityLength(12.0, LengthUnit.INCH);
+		QuantityLength a = new QuantityLength(1.0, LengthUnit.FEET);
+		QuantityLength b = new QuantityLength(12.0, LengthUnit.INCH);
 
-        System.out.println("Equal? " + q1.equals(q2));
-    }
+		QuantityLength result1 = a.add(b);
+		System.out.println("1 ft + 12 in = " + result1);
+
+		QuantityLength result2 = new QuantityLength(12.0, LengthUnit.INCH)
+				.add(new QuantityLength(1.0, LengthUnit.FEET));
+
+		System.out.println("12 in + 1 ft = " + result2);
+	}
 }
-
-
