@@ -3,122 +3,108 @@ package com.QuantityMeasurementApp;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
-class QuantityLengthExplicitAdditionTest {
+class QuantityWeightTest {
 
-    private static final double EPSILON = 1e-6;
+    // Equality
 
     @Test
-    void testAddition_ExplicitTargetUnit_Feet() {
-        QuantityLength a = new QuantityLength(1.0, LengthUnit.FEET);
-        QuantityLength b = new QuantityLength(12.0, LengthUnit.INCH);
+    void testEquality_KgToKg() {
+        QuantityWeight a = new QuantityWeight(1.0, WeightUnit.KILOGRAM);
+        QuantityWeight b = new QuantityWeight(1.0, WeightUnit.KILOGRAM);
 
-        QuantityLength result =
-                QuantityLength.add(a, b, LengthUnit.FEET);
-
-        assertEquals(2.0, result.getValue(), EPSILON);
-        assertEquals(LengthUnit.FEET, result.getUnit());
+        assertTrue(a.equals(b));
     }
 
     @Test
-    void testAddition_ExplicitTargetUnit_Inches() {
-        QuantityLength a = new QuantityLength(1.0, LengthUnit.FEET);
-        QuantityLength b = new QuantityLength(12.0, LengthUnit.INCH);
+    void testEquality_KgToGram() {
+        QuantityWeight a = new QuantityWeight(1.0, WeightUnit.KILOGRAM);
+        QuantityWeight b = new QuantityWeight(1000.0, WeightUnit.GRAM);
 
-        QuantityLength result =
-                QuantityLength.add(a, b, LengthUnit.INCH);
-
-        assertEquals(24.0, result.getValue(), EPSILON);
-        assertEquals(LengthUnit.INCH, result.getUnit());
+        assertTrue(a.equals(b));
     }
 
     @Test
-    void testAddition_ExplicitTargetUnit_Yards() {
-        QuantityLength a = new QuantityLength(1.0, LengthUnit.FEET);
-        QuantityLength b = new QuantityLength(12.0, LengthUnit.INCH);
+    void testEquality_KgToPound() {
+        QuantityWeight a = new QuantityWeight(1.0, WeightUnit.KILOGRAM);
+        QuantityWeight b = new QuantityWeight(2.20462, WeightUnit.POUND);
 
-        QuantityLength result =
-                QuantityLength.add(a, b, LengthUnit.YARDS);
+        assertTrue(a.equals(b));
+    }
 
-        assertEquals(2.0 / 3.0, result.getValue(), EPSILON);
-        assertEquals(LengthUnit.YARDS, result.getUnit());
+    // Conversion
+
+    @Test
+    void testConversion_KgToGram() {
+        QuantityWeight a = new QuantityWeight(1.0, WeightUnit.KILOGRAM);
+
+        QuantityWeight result = a.convertTo(WeightUnit.GRAM);
+
+        assertEquals(1000.0, result.getValue(), 1e-6);
     }
 
     @Test
-    void testAddition_ExplicitTargetUnit_Centimeters() {
-        QuantityLength a = new QuantityLength(1.0, LengthUnit.INCH);
-        QuantityLength b = new QuantityLength(1.0, LengthUnit.INCH);
+    void testConversion_PoundToKg() {
+        QuantityWeight a = new QuantityWeight(2.20462, WeightUnit.POUND);
 
-        QuantityLength result =
-                QuantityLength.add(a, b, LengthUnit.CENTIMETER);
+        QuantityWeight result = a.convertTo(WeightUnit.KILOGRAM);
 
-        assertEquals(5.08, result.getValue(), 1e-4);
-        assertEquals(LengthUnit.CENTIMETER, result.getUnit());
+        assertEquals(1.0, result.getValue(), 1e-3);
+    }
+
+    // Addition
+
+    @Test
+    void testAddition_KgPlusKg() {
+        QuantityWeight a = new QuantityWeight(1.0, WeightUnit.KILOGRAM);
+        QuantityWeight b = new QuantityWeight(2.0, WeightUnit.KILOGRAM);
+
+        QuantityWeight result = a.add(b);
+
+        assertEquals(3.0, result.getValue());
     }
 
     @Test
-    void testAddition_Commutativity_WithExplicitTarget() {
-        QuantityLength a = new QuantityLength(1.0, LengthUnit.FEET);
-        QuantityLength b = new QuantityLength(12.0, LengthUnit.INCH);
+    void testAddition_KgPlusGram() {
+        QuantityWeight a = new QuantityWeight(1.0, WeightUnit.KILOGRAM);
+        QuantityWeight b = new QuantityWeight(1000.0, WeightUnit.GRAM);
 
-        QuantityLength result1 =
-                QuantityLength.add(a, b, LengthUnit.YARDS);
+        QuantityWeight result = a.add(b);
 
-        QuantityLength result2 =
-                QuantityLength.add(b, a, LengthUnit.YARDS);
-
-        assertEquals(result1.getValue(), result2.getValue(), EPSILON);
+        assertEquals(2.0, result.getValue(), 1e-6);
     }
 
+    // Explicit target unit
+
     @Test
-    void testAddition_WithZero_ExplicitTarget() {
-        QuantityLength a = new QuantityLength(5.0, LengthUnit.FEET);
-        QuantityLength b = new QuantityLength(0.0, LengthUnit.INCH);
+    void testAddition_TargetUnitGram() {
+        QuantityWeight a = new QuantityWeight(1.0, WeightUnit.KILOGRAM);
+        QuantityWeight b = new QuantityWeight(1000.0, WeightUnit.GRAM);
 
-        QuantityLength result =
-                QuantityLength.add(a, b, LengthUnit.YARDS);
+        QuantityWeight result =
+                QuantityWeight.add(a, b, WeightUnit.GRAM);
 
-        assertEquals(5.0 / 3.0, result.getValue(), EPSILON);
+        assertEquals(2000.0, result.getValue(), 1e-6);
     }
 
+    // Category safety
+
     @Test
-    void testAddition_NegativeValues_ExplicitTarget() {
-        QuantityLength a = new QuantityLength(5.0, LengthUnit.FEET);
-        QuantityLength b = new QuantityLength(-2.0, LengthUnit.FEET);
+    void testWeightVsLength_NotEqual() {
 
-        QuantityLength result =
-                QuantityLength.add(a, b, LengthUnit.INCH);
+        QuantityWeight weight =
+                new QuantityWeight(1.0, WeightUnit.KILOGRAM);
 
-        assertEquals(36.0, result.getValue(), EPSILON);
+        QuantityLength length =
+                new QuantityLength(1.0, LengthUnit.FEET);
+
+        assertFalse(weight.equals(length));
     }
 
-    @Test
-    void testAddition_NullTargetUnit() {
-        QuantityLength a = new QuantityLength(1.0, LengthUnit.FEET);
-        QuantityLength b = new QuantityLength(12.0, LengthUnit.INCH);
+    // Constructor validation
 
+    @Test
+    void testNullUnit() {
         assertThrows(IllegalArgumentException.class,
-                () -> QuantityLength.add(a, b, null));
-    }
-
-    @Test
-    void testAddition_LargeToSmallScale() {
-        QuantityLength a = new QuantityLength(1000.0, LengthUnit.FEET);
-        QuantityLength b = new QuantityLength(500.0, LengthUnit.FEET);
-
-        QuantityLength result =
-                QuantityLength.add(a, b, LengthUnit.INCH);
-
-        assertEquals(18000.0, result.getValue(), EPSILON);
-    }
-
-    @Test
-    void testAddition_SmallToLargeScale() {
-        QuantityLength a = new QuantityLength(12.0, LengthUnit.INCH);
-        QuantityLength b = new QuantityLength(12.0, LengthUnit.INCH);
-
-        QuantityLength result =
-                QuantityLength.add(a, b, LengthUnit.YARDS);
-
-        assertEquals(2.0 / 3.0, result.getValue(), EPSILON);
+                () -> new QuantityWeight(1.0, null));
     }
 }

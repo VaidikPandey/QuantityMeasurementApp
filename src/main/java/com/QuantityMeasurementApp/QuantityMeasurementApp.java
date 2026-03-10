@@ -4,15 +4,21 @@ public class QuantityMeasurementApp {
 
     public static void main(String[] args) {
 
-        QuantityLength q1 = new QuantityLength(1.0, LengthUnit.FEET);
-        QuantityLength q2 = new QuantityLength(12.0, LengthUnit.INCH);
 
-        System.out.println("Equal? " + q1.equals(q2));
+        QuantityLength l1 = new QuantityLength(1.0, LengthUnit.FEET);
+        QuantityLength l2 = new QuantityLength(12.0, LengthUnit.INCH);
 
-        System.out.println("1 foot in inches: " + q1.convertTo(LengthUnit.INCH));
+        System.out.println("Length equal? " + l1.equals(l2));
 
-        System.out.println("Sum in feet: " + q1.add(q2));
+        QuantityWeight w1 = new QuantityWeight(1.0, WeightUnit.KILOGRAM);
+        QuantityWeight w2 = new QuantityWeight(1000.0, WeightUnit.GRAM);
 
-        System.out.println("Sum in yards: " + q1.add(q2));
+        System.out.println("Weight equal? " + w1.equals(w2));
+
+        // Conversion
+        System.out.println("1 kg to pound: " + w1.convertTo(WeightUnit.POUND));
+
+        // Addition
+        System.out.println("1 kg + 1000 g = " + w1.add(w2));
     }
 }
