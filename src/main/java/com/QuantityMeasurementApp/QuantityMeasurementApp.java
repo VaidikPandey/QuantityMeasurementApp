@@ -4,15 +4,21 @@ public class QuantityMeasurementApp {
 
 	public static void main(String[] args) {
 
-	    Quantity<LengthUnit> a = new Quantity<>(10, LengthUnit.FEET);
-	    Quantity<LengthUnit> b = new Quantity<>(6, LengthUnit.INCH);
+		Quantity<LengthUnit> l1 = new Quantity<>(1, LengthUnit.FEET);
+		Quantity<LengthUnit> l2 = new Quantity<>(12, LengthUnit.INCH);
 
-	    Quantity<LengthUnit> result = a.subtract(b);
+		System.out.println(l1.equals(l2));
 
-	    System.out.println("Subtraction: " + result);
+		Quantity<WeightUnit> w1 = new Quantity<>(1, WeightUnit.KILOGRAM);
+		Quantity<WeightUnit> w2 = new Quantity<>(1000, WeightUnit.GRAM);
 
-	    double ratio = a.divide(new Quantity<>(2, LengthUnit.FEET));
+		System.out.println(w1.add(w2));
 
-	    System.out.println("Division: " + ratio);
+		Quantity<VolumeUnit> v1 = new Quantity<>(1, VolumeUnit.LITRE);
+		Quantity<VolumeUnit> v2 = new Quantity<>(500, VolumeUnit.MILLILITRE);
+
+		System.out.println(v1.subtract(v2));
+
+		System.out.println(l1.divide(new Quantity<>(6, LengthUnit.INCH)));
 	}
 }
