@@ -21,6 +21,17 @@ public final class QuantityLength {
     public LengthUnit getUnit() {
         return unit;
     }
+    
+    public QuantityLength convertTo(LengthUnit targetUnit) {
+
+        if (targetUnit == null)
+            throw new IllegalArgumentException("Target unit cannot be null");
+
+        double baseValue = unit.toFeet(value);
+        double convertedValue = targetUnit.fromFeet(baseValue);
+
+        return new QuantityLength(convertedValue, targetUnit);
+    }
 
     // UC6: Implicit target (first operand unit)
     public QuantityLength add(QuantityLength other) {
