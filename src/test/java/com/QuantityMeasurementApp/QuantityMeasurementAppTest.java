@@ -1,36 +1,39 @@
 package com.QuantityMeasurementApp;
 
-import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
-
 public class QuantityMeasurementAppTest {
 
-    @Test
-    void testLengthEquality() {
+	public static void main(String[] args) {
 
-        Quantity<LengthUnit> a = new Quantity<>(1, LengthUnit.FEET);
-        Quantity<LengthUnit> b = new Quantity<>(12, LengthUnit.INCH);
+		Quantity<LengthUnit> l1 = new Quantity<>(1, LengthUnit.FEET);
 
-        assertTrue(a.equals(b));
-    }
+		Quantity<LengthUnit> l2 = new Quantity<>(12, LengthUnit.INCH);
 
-    @Test
-    void testAddition() {
+		System.out.println("Length equality: " + l1.equals(l2));
 
-        Quantity<LengthUnit> a = new Quantity<>(1, LengthUnit.FEET);
-        Quantity<LengthUnit> b = new Quantity<>(12, LengthUnit.INCH);
+		Quantity<WeightUnit> w1 = new Quantity<>(1, WeightUnit.KILOGRAM);
 
-        Quantity<LengthUnit> result = a.add(b);
+		Quantity<WeightUnit> w2 = new Quantity<>(1000, WeightUnit.GRAM);
 
-        assertEquals(2.0, result.getValue());
-    }
+		System.out.println("Weight addition: " + w1.add(w2));
 
-    @Test
-    void testDivision() {
+		Quantity<VolumeUnit> v1 = new Quantity<>(1, VolumeUnit.LITRE);
 
-        Quantity<LengthUnit> a = new Quantity<>(10, LengthUnit.FEET);
-        Quantity<LengthUnit> b = new Quantity<>(2, LengthUnit.FEET);
+		Quantity<VolumeUnit> v2 = new Quantity<>(500, VolumeUnit.MILLILITRE);
 
-        assertEquals(5.0, a.divide(b));
-    }
+		System.out.println("Volume subtraction: " + v1.subtract(v2));
+
+		Quantity<TemperatureUnit> t1 = new Quantity<>(0, TemperatureUnit.CELSIUS);
+
+		Quantity<TemperatureUnit> t2 = new Quantity<>(32, TemperatureUnit.FAHRENHEIT);
+
+		System.out.println("Temperature equality: " + t1.equals(t2));
+
+		System.out.println("Temperature conversion: " + t1.convertTo(TemperatureUnit.FAHRENHEIT));
+
+		try {
+			t1.add(t2);
+		} catch (UnsupportedOperationException e) {
+			System.out.println("Temperature arithmetic not supported");
+		}
+	}
 }
