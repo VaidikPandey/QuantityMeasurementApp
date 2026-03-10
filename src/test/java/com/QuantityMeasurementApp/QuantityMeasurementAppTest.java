@@ -3,108 +3,142 @@ package com.QuantityMeasurementApp;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
-class QuantityWeightTest {
+class QuantityTest {
+	//Implementing interface.
+    @Test
+    void testIMeasurable_LengthUnitImplementation() {
+        IMeasurable unit = LengthUnit.FEET;
 
-    // Equality
+        assertNotNull(unit.getConversionFactor());
+        assertEquals("FEET", unit.getUnitName());
+    }
 
     @Test
-    void testEquality_KgToKg() {
-        QuantityWeight a = new QuantityWeight(1.0, WeightUnit.KILOGRAM);
-        QuantityWeight b = new QuantityWeight(1.0, WeightUnit.KILOGRAM);
+    void testIMeasurable_WeightUnitImplementation() {
+        IMeasurable unit = WeightUnit.KILOGRAM;
+
+        assertNotNull(unit.getConversionFactor());
+        assertEquals("KILOGRAM", unit.getUnitName());
+    }
+
+    
+    //Lenght equality
+    @Test
+    void testGenericQuantity_LengthEquality() {
+
+        Quantity<LengthUnit> a =
+                new Quantity<>(1.0, LengthUnit.FEET);
+
+        Quantity<LengthUnit> b =
+                new Quantity<>(12.0, LengthUnit.INCH);
 
         assertTrue(a.equals(b));
     }
 
+    // Weight Equality
     @Test
-    void testEquality_KgToGram() {
-        QuantityWeight a = new QuantityWeight(1.0, WeightUnit.KILOGRAM);
-        QuantityWeight b = new QuantityWeight(1000.0, WeightUnit.GRAM);
+    void testGenericQuantity_WeightEquality() {
+
+        Quantity<WeightUnit> a =
+                new Quantity<>(1.0, WeightUnit.KILOGRAM);
+
+        Quantity<WeightUnit> b =
+                new Quantity<>(1000.0, WeightUnit.GRAM);
 
         assertTrue(a.equals(b));
     }
 
-    @Test
-    void testEquality_KgToPound() {
-        QuantityWeight a = new QuantityWeight(1.0, WeightUnit.KILOGRAM);
-        QuantityWeight b = new QuantityWeight(2.20462, WeightUnit.POUND);
+    // Length Conversion
+     @Test
+    void testGenericQuantity_LengthConversion() {
 
-        assertTrue(a.equals(b));
+        Quantity<LengthUnit> a =
+                new Quantity<>(1.0, LengthUnit.FEET);
+
+        Quantity<LengthUnit> result =
+                a.convertTo(LengthUnit.INCH);
+
+        assertEquals(12.0, result.getValue(), 1e-6);
+        assertEquals(LengthUnit.INCH, result.getUnit());
     }
 
-    // Conversion
+    // Weight Conversion
+        @Test
+    void testGenericQuantity_WeightConversion() {
 
-    @Test
-    void testConversion_KgToGram() {
-        QuantityWeight a = new QuantityWeight(1.0, WeightUnit.KILOGRAM);
+        Quantity<WeightUnit> a =
+                new Quantity<>(1.0, WeightUnit.KILOGRAM);
 
-        QuantityWeight result = a.convertTo(WeightUnit.GRAM);
+        Quantity<WeightUnit> result =
+                a.convertTo(WeightUnit.GRAM);
 
         assertEquals(1000.0, result.getValue(), 1e-6);
+        assertEquals(WeightUnit.GRAM, result.getUnit());
     }
 
-    @Test
-    void testConversion_PoundToKg() {
-        QuantityWeight a = new QuantityWeight(2.20462, WeightUnit.POUND);
+    // Length Addition
+     @Test
+    void testGenericQuantity_LengthAddition() {
 
-        QuantityWeight result = a.convertTo(WeightUnit.KILOGRAM);
+        Quantity<LengthUnit> a =
+                new Quantity<>(1.0, LengthUnit.FEET);
 
-        assertEquals(1.0, result.getValue(), 1e-3);
-    }
+        Quantity<LengthUnit> b =
+                new Quantity<>(12.0, LengthUnit.INCH);
 
-    // Addition
-
-    @Test
-    void testAddition_KgPlusKg() {
-        QuantityWeight a = new QuantityWeight(1.0, WeightUnit.KILOGRAM);
-        QuantityWeight b = new QuantityWeight(2.0, WeightUnit.KILOGRAM);
-
-        QuantityWeight result = a.add(b);
-
-        assertEquals(3.0, result.getValue());
-    }
-
-    @Test
-    void testAddition_KgPlusGram() {
-        QuantityWeight a = new QuantityWeight(1.0, WeightUnit.KILOGRAM);
-        QuantityWeight b = new QuantityWeight(1000.0, WeightUnit.GRAM);
-
-        QuantityWeight result = a.add(b);
+        Quantity<LengthUnit> result =
+                a.add(b, LengthUnit.FEET);
 
         assertEquals(2.0, result.getValue(), 1e-6);
     }
 
-    // Explicit target unit
-
+     // Weight Addition
+   
     @Test
-    void testAddition_TargetUnitGram() {
-        QuantityWeight a = new QuantityWeight(1.0, WeightUnit.KILOGRAM);
-        QuantityWeight b = new QuantityWeight(1000.0, WeightUnit.GRAM);
+    void testGenericQuantity_WeightAddition() {
 
-        QuantityWeight result =
-                QuantityWeight.add(a, b, WeightUnit.GRAM);
+        Quantity<WeightUnit> a =
+                new Quantity<>(1.0, WeightUnit.KILOGRAM);
 
-        assertEquals(2000.0, result.getValue(), 1e-6);
+        Quantity<WeightUnit> b =
+                new Quantity<>(1000.0, WeightUnit.GRAM);
+
+        Quantity<WeightUnit> result =
+                a.add(b, WeightUnit.KILOGRAM);
+
+        assertEquals(2.0, result.getValue(), 1e-6);
     }
 
-    // Category safety
+    // Cross Category Prevention
+     @Test
+    void testCrossCategory_LengthVsWeight() {
 
-    @Test
-    void testWeightVsLength_NotEqual() {
+        Quantity<LengthUnit> length =
+                new Quantity<>(1.0, LengthUnit.FEET);
 
-        QuantityWeight weight =
-                new QuantityWeight(1.0, WeightUnit.KILOGRAM);
+        Quantity<WeightUnit> weight =
+                new Quantity<>(1.0, WeightUnit.KILOGRAM);
 
-        QuantityLength length =
-                new QuantityLength(1.0, LengthUnit.FEET);
-
-        assertFalse(weight.equals(length));
+        assertFalse(length.equals(weight));
     }
 
-    // Constructor validation
+    // Constructor Validation
+     @Test
+    void testConstructor_NullUnit() {
+
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> new Quantity<>(1.0, null)
+        );
+    }
 
     @Test
-    void testNullUnit() {
-        assertThrows(IllegalArgumentException.class,
-                () -> new QuantityWeight(1.0, null));
+    void testConstructor_InvalidValue() {
+
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> new Quantity<>(Double.NaN, LengthUnit.FEET)
+        );
     }
+
 }
