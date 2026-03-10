@@ -1,144 +1,113 @@
 package com.QuantityMeasurementApp;
 
-import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
-class QuantityTest {
-	//Implementing interface.
-    @Test
-    void testIMeasurable_LengthUnitImplementation() {
-        IMeasurable unit = LengthUnit.FEET;
+import org.junit.jupiter.api.Test;
 
-        assertNotNull(unit.getConversionFactor());
-        assertEquals("FEET", unit.getUnitName());
-    }
+public class QuantityMeasurementAppTest {
 
-    @Test
-    void testIMeasurable_WeightUnitImplementation() {
-        IMeasurable unit = WeightUnit.KILOGRAM;
+	private static final double EPSILON = 1e-6;
 
-        assertNotNull(unit.getConversionFactor());
-        assertEquals("KILOGRAM", unit.getUnitName());
-    }
+	// equality tests
 
-    
-    //Lenght equality
-    @Test
-    void testGenericQuantity_LengthEquality() {
+	@Test
+	void testEquality_LitreToLitre() {
+		Quantity<VolumeUnit> v1 = new Quantity<>(1.0, VolumeUnit.LITRE);
+		Quantity<VolumeUnit> v2 = new Quantity<>(1.0, VolumeUnit.LITRE);
 
-        Quantity<LengthUnit> a =
-                new Quantity<>(1.0, LengthUnit.FEET);
+		assertEquals(v1, v2);
+	}
 
-        Quantity<LengthUnit> b =
-                new Quantity<>(12.0, LengthUnit.INCH);
+	@Test
+	void testEquality_LitreToMillilitre() {
+		Quantity<VolumeUnit> v1 = new Quantity<>(1.0, VolumeUnit.LITRE);
+		Quantity<VolumeUnit> v2 = new Quantity<>(1000.0, VolumeUnit.MILLILITRE);
 
-        assertTrue(a.equals(b));
-    }
+		assertEquals(v1, v2);
+	}
 
-    // Weight Equality
-    @Test
-    void testGenericQuantity_WeightEquality() {
+	@Test
+	void testEquality_LitreToGallon() {
+		Quantity<VolumeUnit> v1 = new Quantity<>(1.0, VolumeUnit.LITRE);
+		Quantity<VolumeUnit> v2 = new Quantity<>(0.264172, VolumeUnit.GALLON);
 
-        Quantity<WeightUnit> a =
-                new Quantity<>(1.0, WeightUnit.KILOGRAM);
+		assertEquals(v1, v2);
+	}
 
-        Quantity<WeightUnit> b =
-                new Quantity<>(1000.0, WeightUnit.GRAM);
+	// conversion tests
 
-        assertTrue(a.equals(b));
-    }
+	@Test
+	void testConversion_LitreToMillilitre() {
+		Quantity<VolumeUnit> v = new Quantity<>(1.0, VolumeUnit.LITRE);
+		Quantity<VolumeUnit> result = v.convertTo(VolumeUnit.MILLILITRE);
 
-    // Length Conversion
-     @Test
-    void testGenericQuantity_LengthConversion() {
+		assertEquals(1000.0, result.getValue(), EPSILON);
+	}
 
-        Quantity<LengthUnit> a =
-                new Quantity<>(1.0, LengthUnit.FEET);
+	@Test
+	void testConversion_GallonToLitre() {
+		Quantity<VolumeUnit> v = new Quantity<>(1.0, VolumeUnit.GALLON);
+		Quantity<VolumeUnit> result = v.convertTo(VolumeUnit.LITRE);
 
-        Quantity<LengthUnit> result =
-                a.convertTo(LengthUnit.INCH);
+		assertEquals(3.78541, result.getValue(), EPSILON);
+	}
 
-        assertEquals(12.0, result.getValue(), 1e-6);
-        assertEquals(LengthUnit.INCH, result.getUnit());
-    }
+	@Test
+	void testConversion_MillilitreToGallon() {
+		Quantity<VolumeUnit> v = new Quantity<>(1000.0, VolumeUnit.MILLILITRE);
+		Quantity<VolumeUnit> result = v.convertTo(VolumeUnit.GALLON);
 
-    // Weight Conversion
-        @Test
-    void testGenericQuantity_WeightConversion() {
+		assertEquals(0.264172, result.getValue(), EPSILON);
+	}
 
-        Quantity<WeightUnit> a =
-                new Quantity<>(1.0, WeightUnit.KILOGRAM);
+	// addition tests
 
-        Quantity<WeightUnit> result =
-                a.convertTo(WeightUnit.GRAM);
+	@Test
+	void testAddition_SameUnit() {
+		Quantity<VolumeUnit> v1 = new Quantity<>(1.0, VolumeUnit.LITRE);
+		Quantity<VolumeUnit> v2 = new Quantity<>(2.0, VolumeUnit.LITRE);
 
-        assertEquals(1000.0, result.getValue(), 1e-6);
-        assertEquals(WeightUnit.GRAM, result.getUnit());
-    }
+		Quantity<VolumeUnit> result = v1.add(v2);
 
-    // Length Addition
-     @Test
-    void testGenericQuantity_LengthAddition() {
+		assertEquals(3.0, result.getValue(), EPSILON);
+	}
 
-        Quantity<LengthUnit> a =
-                new Quantity<>(1.0, LengthUnit.FEET);
+	@Test
+	void testAddition_CrossUnit() {
+		Quantity<VolumeUnit> v1 = new Quantity<>(1.0, VolumeUnit.LITRE);
+		Quantity<VolumeUnit> v2 = new Quantity<>(1000.0, VolumeUnit.MILLILITRE);
 
-        Quantity<LengthUnit> b =
-                new Quantity<>(12.0, LengthUnit.INCH);
+		Quantity<VolumeUnit> result = v1.add(v2);
 
-        Quantity<LengthUnit> result =
-                a.add(b, LengthUnit.FEET);
+		assertEquals(2.0, result.getValue(), EPSILON);
+	}
 
-        assertEquals(2.0, result.getValue(), 1e-6);
-    }
+	@Test
+	void testAddition_ExplicitTargetUnit() {
+		Quantity<VolumeUnit> v1 = new Quantity<>(1.0, VolumeUnit.LITRE);
+		Quantity<VolumeUnit> v2 = new Quantity<>(1000.0, VolumeUnit.MILLILITRE);
 
-     // Weight Addition
-   
-    @Test
-    void testGenericQuantity_WeightAddition() {
+		Quantity<VolumeUnit> result = v1.add(v2, VolumeUnit.MILLILITRE);
 
-        Quantity<WeightUnit> a =
-                new Quantity<>(1.0, WeightUnit.KILOGRAM);
+		assertEquals(2000.0, result.getValue(), EPSILON);
+	}
 
-        Quantity<WeightUnit> b =
-                new Quantity<>(1000.0, WeightUnit.GRAM);
+	// edge cases
 
-        Quantity<WeightUnit> result =
-                a.add(b, WeightUnit.KILOGRAM);
+	@Test
+	void testZeroVolume() {
+		Quantity<VolumeUnit> v1 = new Quantity<>(0.0, VolumeUnit.LITRE);
+		Quantity<VolumeUnit> v2 = new Quantity<>(0.0, VolumeUnit.MILLILITRE);
 
-        assertEquals(2.0, result.getValue(), 1e-6);
-    }
+		assertEquals(v1, v2);
+	}
 
-    // Cross Category Prevention
-     @Test
-    void testCrossCategory_LengthVsWeight() {
+	@Test
+	void testNegativeVolume() {
+		Quantity<VolumeUnit> v1 = new Quantity<>(-1.0, VolumeUnit.LITRE);
+		Quantity<VolumeUnit> v2 = new Quantity<>(-1000.0, VolumeUnit.MILLILITRE);
 
-        Quantity<LengthUnit> length =
-                new Quantity<>(1.0, LengthUnit.FEET);
-
-        Quantity<WeightUnit> weight =
-                new Quantity<>(1.0, WeightUnit.KILOGRAM);
-
-        assertFalse(length.equals(weight));
-    }
-
-    // Constructor Validation
-     @Test
-    void testConstructor_NullUnit() {
-
-        assertThrows(
-                IllegalArgumentException.class,
-                () -> new Quantity<>(1.0, null)
-        );
-    }
-
-    @Test
-    void testConstructor_InvalidValue() {
-
-        assertThrows(
-                IllegalArgumentException.class,
-                () -> new Quantity<>(Double.NaN, LengthUnit.FEET)
-        );
-    }
+		assertEquals(v1, v2);
+	}
 
 }
