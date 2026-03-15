@@ -1,39 +1,135 @@
 package com.QuantityMeasurementApp;
 
+import static org.junit.jupiter.api.Assertions.*;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import com.QuantityMeasurementApp.controller.*;
+import com.QuantityMeasurementApp.model.*;
+import com.QuantityMeasurementApp.repository.*;
+import com.QuantityMeasurementApp.service.*;
+
 public class QuantityMeasurementAppTest {
 
-	public static void main(String[] args) {
+	IQuantityMeasurementService service;
+	QuantityMeasurementController controller;
 
-		Quantity<LengthUnit> l1 = new Quantity<>(1, LengthUnit.FEET);
+	@BeforeEach
+	void setup() {
 
-		Quantity<LengthUnit> l2 = new Quantity<>(12, LengthUnit.INCH);
+		IQuantityMeasurementRepository repo = QuantityMeasurementCacheRepository.getInstance();
 
-		System.out.println("Length equality: " + l1.equals(l2));
+		service = new QuantityMeasurementServiceImpl(repo);
 
-		Quantity<WeightUnit> w1 = new Quantity<>(1, WeightUnit.KILOGRAM);
+		controller = new QuantityMeasurementController(service);
+	}
 
-		Quantity<WeightUnit> w2 = new Quantity<>(1000, WeightUnit.GRAM);
+	// ENTITY TEST
 
-		System.out.println("Weight addition: " + w1.add(w2));
+	@Test
+	void testQuantityDTOCreation() {
 
-		Quantity<VolumeUnit> v1 = new Quantity<>(1, VolumeUnit.LITRE);
+		QuantityDTO q = new QuantityDTO(1.0, "FEET", "LENGTH");
 
-		Quantity<VolumeUnit> v2 = new Quantity<>(500, VolumeUnit.MILLILITRE);
+		assertEquals(1.0, q.getValue());
 
-		System.out.println("Volume subtraction: " + v1.subtract(v2));
+		assertEquals("FEET", q.getUnit());
+	}
 
-		Quantity<TemperatureUnit> t1 = new Quantity<>(0, TemperatureUnit.CELSIUS);
+	// SERVICE TESTS
 
-		Quantity<TemperatureUnit> t2 = new Quantity<>(32, TemperatureUnit.FAHRENHEIT);
+	@Test
+	void testServiceCompare() {
 
-		System.out.println("Temperature equality: " + t1.equals(t2));
+		QuantityDTO q1 = new QuantityDTO(1.0, "FEET", "LENGTH");
 
-		System.out.println("Temperature conversion: " + t1.convertTo(TemperatureUnit.FAHRENHEIT));
+		QuantityDTO q2 = new QuantityDTO(12.0, "INCH", "LENGTH");
 
-		try {
-			t1.add(t2);
-		} catch (UnsupportedOperationException e) {
-			System.out.println("Temperature arithmetic not supported");
-		}
+		assertTrue(service.compare(q1, q2));
+	}
+
+	@Test
+	void testServiceConversion() {
+
+		QuantityDTO q = new QuantityDTO(1.0, "FEET", "LENGTH");
+
+		QuantityDTO result = service.convert(q, "INCH");
+
+		assertEquals(12.0, result.getValue());
+	}
+
+	@Test
+	void testServiceAddition() {
+
+		QuantityDTO q1 = new QuantityDTO(1.0, "FEET", "LENGTH");
+
+		QuantityDTO q2 = new QuantityDTO(12.0, "INCH", "LENGTH");
+
+		QuantityDTO result = service.add(q1, q2);
+
+		assertEquals(2.0, result.getValue());
+	}
+
+	@Test
+	void testServiceSubtraction() {
+
+		QuantityDTO q1 = new QuantityDTO(10.0, "FEET", "LENGTH");
+
+		QuantityDTO q2 = new QuantityDTO(12.0, "INCH", "LENGTH");
+
+		QuantityDTO result = service.subtract(q1, q2);
+
+		assertEquals(9.0, result.getValue());
+	}
+
+	@Test
+	void testServiceDivision() {
+
+		QuantityDTO q1 = new QuantityDTO(10.0, "FEET", "LENGTH");
+
+		QuantityDTO q2 = new QuantityDTO(2.0, "FEET", "LENGTH");
+
+		double result = service.divide(q1, q2);
+
+		assertEquals(5.0, result);
+	}
+
+	// CONTROLLER TEST
+
+	@Test
+	void testControllerObject() {
+
+		assertNotNull(controller);
+	}
+
+	// REPOSITORY TEST
+
+	@Test
+	void testRepositorySave() {
+
+		IQuantityMeasurementRepository repo = QuantityMeasurementCacheRepository.getInstance();
+
+		QuantityMeasurementEntity entity = new QuantityMeasurementEntity("TEST", "SUCCESS");
+
+		repo.save(entity);
+
+		assertFalse(repo.findAll().isEmpty());
+	}
+
+	// INTEGRATION TEST
+
+	@Test
+	void testEndToEnd() {
+
+		QuantityDTO q1 = new QuantityDTO(1.0, "FEET", "LENGTH");
+
+		QuantityDTO q2 = new QuantityDTO(12.0, "INCH", "LENGTH");
+
+		assertTrue(service.compare(q1, q2));
+
+		QuantityDTO result = service.add(q1, q2);
+
+		assertEquals(2.0, result.getValue());
 	}
 }
