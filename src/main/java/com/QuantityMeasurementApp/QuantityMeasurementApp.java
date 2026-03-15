@@ -1,39 +1,78 @@
 package com.QuantityMeasurementApp;
 
+import com.QuantityMeasurementApp.controller.QuantityMeasurementController;
+import com.QuantityMeasurementApp.model.QuantityDTO;
+import com.QuantityMeasurementApp.model.QuantityMeasurementEntity;
+import com.QuantityMeasurementApp.repository.IQuantityMeasurementRepository;
+import com.QuantityMeasurementApp.repository.QuantityMeasurementCacheRepository;
+import com.QuantityMeasurementApp.repository.QuantityMeasurementDatabaseRepository;
+import com.QuantityMeasurementApp.service.QuantityMeasurementServiceImpl;
+import com.QuantityMeasurementApp.util.ApplicationConfig;
+
+import java.util.List;
+
 public class QuantityMeasurementApp {
+
+	private final IQuantityMeasurementRepository repo;
+	private final QuantityMeasurementController controller;
+
+	public QuantityMeasurementApp() {
+		String repoType = ApplicationConfig.getRepositoryType();
+		if (repoType.equalsIgnoreCase("database")) {
+			this.repo = new QuantityMeasurementDatabaseRepository();
+			System.out.println("App: using DATABASE repository");
+		} else {
+			this.repo = QuantityMeasurementCacheRepository.getInstance();
+			System.out.println("App: using CACHE repository");
+		}
+		QuantityMeasurementServiceImpl service = new QuantityMeasurementServiceImpl(repo);
+		this.controller = new QuantityMeasurementController(service);
+	}
+
+	public void deleteAllMeasurements() {
+		repo.deleteAll();
+	}
+
+	public void closeResources() {
+		repo.releaseResources();
+		System.out.println("App: resources closed");
+	}
 
 	public static void main(String[] args) {
 
-		Quantity<LengthUnit> l1 = new Quantity<>(1, LengthUnit.FEET);
+		QuantityMeasurementApp app = new QuantityMeasurementApp();
 
-		Quantity<LengthUnit> l2 = new Quantity<>(12, LengthUnit.INCH);
+		// Compare 1 FEET and 12 INCH
+		QuantityDTO q1 = new QuantityDTO(1.0, "FEET", "LENGTH");
+		QuantityDTO q2 = new QuantityDTO(12.0, "INCH", "LENGTH");
+		app.controller.performCompare(q1, q2);
 
-		System.out.println("Length equality: " + l1.equals(l2));
+		// Convert 1 FEET to INCH
+		app.controller.performConvert(q1, "INCH");
 
-		Quantity<WeightUnit> w1 = new Quantity<>(1, WeightUnit.KILOGRAM);
+		// Add 1 FEET + 12 INCH
+		app.controller.performAdd(q1, q2);
 
-		Quantity<WeightUnit> w2 = new Quantity<>(1000, WeightUnit.GRAM);
+		// Subtract
+		QuantityDTO q3 = new QuantityDTO(10.0, "FEET", "LENGTH");
+		app.controller.performSubtract(q3, q2);
 
-		System.out.println("Weight addition: " + w1.add(w2));
+		// Divide
+		QuantityDTO q4 = new QuantityDTO(2.0, "FEET", "LENGTH");
+		app.controller.performDivide(q3, q4);
 
-		Quantity<VolumeUnit> v1 = new Quantity<>(1, VolumeUnit.LITRE);
-
-		Quantity<VolumeUnit> v2 = new Quantity<>(500, VolumeUnit.MILLILITRE);
-
-		System.out.println("Volume subtraction: " + v1.subtract(v2));
-
-		Quantity<TemperatureUnit> t1 = new Quantity<>(0, TemperatureUnit.CELSIUS);
-
-		Quantity<TemperatureUnit> t2 = new Quantity<>(32, TemperatureUnit.FAHRENHEIT);
-
-		System.out.println("Temperature equality: " + t1.equals(t2));
-
-		System.out.println("Temperature conversion: " + t1.convertTo(TemperatureUnit.FAHRENHEIT));
-
-		try {
-			t1.add(t2);
-		} catch (UnsupportedOperationException e) {
-			System.out.println("Temperature arithmetic not supported");
+		// Show all saved measurements
+		System.out.println("\n--- All Measurements in DB ---");
+		List<QuantityMeasurementEntity> all = app.repo.findAll();
+		for (QuantityMeasurementEntity e : all) {
+			System.out.println(e);
 		}
+
+		System.out.println("Total count: " + app.repo.getTotalCount());
+		System.out.println("Pool stats: " + app.repo.getPoolStatistics());
+
+		// Cleanup
+		app.deleteAllMeasurements();
+		app.closeResources();
 	}
 }

@@ -110,7 +110,7 @@ public class QuantityMeasurementAppTest {
 
 		IQuantityMeasurementRepository repo = QuantityMeasurementCacheRepository.getInstance();
 
-		QuantityMeasurementEntity entity = new QuantityMeasurementEntity("TEST", "SUCCESS");
+		QuantityMeasurementEntity entity = new QuantityMeasurementEntity("TEST", "GENERAL","SUCCESS");
 
 		repo.save(entity);
 
