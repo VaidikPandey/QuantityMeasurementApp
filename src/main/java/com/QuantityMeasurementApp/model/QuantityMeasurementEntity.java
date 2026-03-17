@@ -1,16 +1,31 @@
 package com.QuantityMeasurementApp.model;
 
-import java.io.Serializable;
 import java.time.LocalDateTime;
+import jakarta.persistence.*;
 
-public class QuantityMeasurementEntity implements Serializable {
+@Entity
+@Table(name = "quantity_measurement_entity")
+public class QuantityMeasurementEntity {
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+
+	@Column(nullable = false)
 	private String operation;
+
+	@Column(name = "measurement_type", nullable = false)
 	private String measurementType;
+
+	@Column(nullable = true)
 	private String result;
+
+	@Column(name = "is_error")
 	private boolean error;
+
 	private String message;
+
+	@Column(name = "created_at")
 	private LocalDateTime createdAt;
 
 	public QuantityMeasurementEntity(String operation, String measurementType, String result) {
@@ -29,12 +44,12 @@ public class QuantityMeasurementEntity implements Serializable {
 		this.createdAt = LocalDateTime.now();
 	}
 
-	public Long getId() {
-		return id;
+	// Default constructor required by JPA
+	public QuantityMeasurementEntity() {
 	}
 
-	public void setId(Long id) {
-		this.id = id;
+	public Long getId() {
+		return id;
 	}
 
 	public String getOperation() {
