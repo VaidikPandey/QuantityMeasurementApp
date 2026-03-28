@@ -1,0 +1,21 @@
+# Database Configuration
+spring.datasource.url=jdbc:h2:mem:quantitydb;DB_CLOSE_DELAY=-1
+spring.datasource.driver-class-name=org.h2.Driver
+spring.datasource.username=sa
+spring.datasource.password=
+
+# JPA
+spring.jpa.hibernate.ddl-auto=create-drop
+spring.jpa.show-sql=true
+spring.h2.console.enabled=true
+spring.h2.console.path=/h2-console
+spring.jpa.open-in-view=false
+
+# Google OAuth2 - Replace with your credentials
+spring.security.oauth2.client.registration.google.client-id=YOUR_CLIENT_ID_HERE
+spring.security.oauth2.client.registration.google.client-secret=YOUR_CLIENT_SECRET_HERE
+spring.security.oauth2.client.registration.google.scope=email,profile
+
+# JWT
+jwt.secret=your-super-secret-key
+jwt.expiration=86400000
