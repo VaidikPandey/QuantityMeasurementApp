@@ -1,6 +1,6 @@
 # ⚖️ Quantity Measurement App
 
-A Java application built using **Test Driven Development (TDD)** that progressively evolves from a simple unit comparison utility into a full **Spring Boot REST API** with database persistence.
+A Java application built using **Data Driven Testing (DDT)** that progressively evolves from a simple unit comparison utility into a full **Spring Boot REST API** with database persistence.
 
 ---
 
@@ -88,6 +88,21 @@ This project was built **use case by use case**, each one adding a new layer of 
 
 ---
 
+### 🔴 Phase 6 — Security (UC18)
+
+| UC | Branch | Description |
+|----|--------|-------------|
+| UC18 | `feature/UC18-GoogleAuth` | Google OAuth2 login + JWT token based API security |
+
+**Key concepts introduced:**
+- Google OAuth2 authentication
+- JWT token generation and validation
+- Protected API endpoints
+- Spring Security filter chain
+- Stateless session management
+
+---
+
 ## ⚙️ Running the App
 
 ### Prerequisites
@@ -98,9 +113,6 @@ This project was built **use case by use case**, each one adding a new layer of 
 ```bash
 # Clone the repo
 git clone https://github.com/VaidikPandey/QuantityMeasurementApp.git
-
-# Checkout UC17 branch
-git checkout feature/UC17-SpringBoot
 
 # Run the app
 mvn spring-boot:run
@@ -135,7 +147,7 @@ mvn test -Dtest=QuantityMeasurementAppTest
 
 ## 🧠 Key Concepts Learned
 
-- Test Driven Development (TDD)
+- Data Driven Testing (DDT)
 - Object Oriented Design (Generics, Interfaces, Enums)
 - N-Tier Architecture (Controller → Service → Repository)
 - JDBC & Connection Pooling
