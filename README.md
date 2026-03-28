@@ -76,7 +76,7 @@ This project was built **use case by use case**, each one adding a new layer of 
 
 | UC | Branch | Description |
 |----|--------|-------------|
-| UC17 | `feature/UC17-SpringBoot` | Full Spring Boot REST API with JPA, embedded Tomcat, H2 console, Security config, and Global Exception Handler |
+| UC17 | `feature/UC17-SpringBackendQMa` | Full Spring Boot REST API with JPA, embedded Tomcat, H2 console, Security config, and Global Exception Handler |
 
 **Key concepts introduced:**
 - Spring Boot auto-configuration
