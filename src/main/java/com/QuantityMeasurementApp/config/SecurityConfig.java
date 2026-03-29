@@ -33,13 +33,12 @@ public class SecurityConfig {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             )
             .authorizeHttpRequests(auth -> auth
-                // Public endpoints - no token needed
-                .requestMatchers("/h2-console/**").permitAll()
-                .requestMatchers("/login/**").permitAll()
-                .requestMatchers("/oauth2/**").permitAll()
-                // Protected endpoints - token required
-                .anyRequest().authenticated()
-            )
+            	    .requestMatchers("/h2-console/**").permitAll()
+            	    .requestMatchers("/login/**").permitAll()
+            	    .requestMatchers("/oauth2/**").permitAll()
+            	    .requestMatchers("/auth/**").permitAll()
+            	    .anyRequest().authenticated()
+            	)
             .headers(headers -> headers
                 .frameOptions(frame -> frame.disable())
             )
