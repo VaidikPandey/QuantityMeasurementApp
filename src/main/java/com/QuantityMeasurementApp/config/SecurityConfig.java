@@ -8,6 +8,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfigurationSource;
 
 import com.QuantityMeasurementApp.security.JwtAuthFilter;
 import com.QuantityMeasurementApp.security.OAuth2UserService;
@@ -25,20 +26,24 @@ public class SecurityConfig {
     @Autowired
     private OAuth2SuccessHandler oAuth2SuccessHandler;
 
+    @Autowired
+    private CorsConfigurationSource corsConfigurationSource;
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
             .csrf(csrf -> csrf.disable())
+            .cors(cors -> cors.configurationSource(corsConfigurationSource))
             .sessionManagement(session -> session
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             )
             .authorizeHttpRequests(auth -> auth
-            	    .requestMatchers("/h2-console/**").permitAll()
-            	    .requestMatchers("/login/**").permitAll()
-            	    .requestMatchers("/oauth2/**").permitAll()
-            	    .requestMatchers("/auth/**").permitAll()
-            	    .anyRequest().authenticated()
-            	)
+                .requestMatchers("/h2-console/**").permitAll()
+                .requestMatchers("/login/**").permitAll()
+                .requestMatchers("/oauth2/**").permitAll()
+                .requestMatchers("/auth/**").permitAll()
+                .anyRequest().authenticated()
+            )
             .headers(headers -> headers
                 .frameOptions(frame -> frame.disable())
             )
