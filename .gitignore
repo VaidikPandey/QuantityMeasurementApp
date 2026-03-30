@@ -1,0 +1,16 @@
+# Maven build folder
+target/
+
+# Compiled files
+*.class
+
+# Eclipse
+.project
+.classpath
+.settings/
+
+# OS junk
+.DS_Store
+Thumbs.db
+
+application.properties
