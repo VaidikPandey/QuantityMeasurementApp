@@ -2,6 +2,7 @@ package com.QuantityMeasurementApp.config;
 
 import java.io.IOException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
@@ -14,27 +15,29 @@ import jakarta.servlet.http.HttpServletResponse;
 @Component
 public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
-	@Autowired
-	private JwtService jwtService;
+    @Autowired
+    private JwtService jwtService;
 
-	@Override
-	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
-			Authentication authentication) throws IOException, ServletException {
+    @Value("${app.frontend.url}")
+    private String frontendUrl;
 
-		OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
+    @Override
+    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
+            Authentication authentication) throws IOException, ServletException {
 
-		String email = oAuth2User.getAttribute("email");
-		String name = oAuth2User.getAttribute("name");
+        OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
+        String email = oAuth2User.getAttribute("email");
+        String name = oAuth2User.getAttribute("name");
 
-		// generate JWT token
-		String token = jwtService.generateToken(email);
+        String token = jwtService.generateToken(email);
 
-		System.out.println("Google login success: " + email);
+        System.out.println("Google login success: " + email);
 
-		// redirect to frontend dashboard with token in URL
-		String redirectUrl = "http://localhost:5500/dashboard.html" + "?token=" + token + "&name=" + name + "&email="
-				+ email;
+        String redirectUrl = frontendUrl + "/dashboard.html"
+                + "?token=" + token
+                + "&name=" + name
+                + "&email=" + email;
 
-		response.sendRedirect(redirectUrl);
-	}
+        response.sendRedirect(redirectUrl);
+    }
 }

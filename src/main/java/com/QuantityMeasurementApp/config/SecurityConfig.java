@@ -34,9 +34,8 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.disable())
             .cors(cors -> cors.configurationSource(corsConfigurationSource))
 
-            // KEY FIX: OAuth2 needs session during the login flow
-            // We use IF_REQUIRED so session exists only when needed (during OAuth2 handshake)
-            // After login, JWT takes over — so we're still stateless for API calls
+            // IF_REQUIRED lets Spring create a session ONLY during OAuth2 handshake
+            // After that your JWT takes over — APIs remain effectively stateless
             .sessionManagement(session -> session
                 .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
             )
