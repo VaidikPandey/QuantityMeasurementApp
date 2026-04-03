@@ -9,7 +9,6 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfigurationSource;
-
 import com.QuantityMeasurementApp.security.JwtAuthFilter;
 import com.QuantityMeasurementApp.security.OAuth2UserService;
 
@@ -34,27 +33,29 @@ public class SecurityConfig {
         http
             .csrf(csrf -> csrf.disable())
             .cors(cors -> cors.configurationSource(corsConfigurationSource))
+
+            // KEY FIX: OAuth2 needs session during the login flow
+            // We use IF_REQUIRED so session exists only when needed (during OAuth2 handshake)
+            // After login, JWT takes over — so we're still stateless for API calls
             .sessionManagement(session -> session
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
             )
+
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/h2-console/**").permitAll()
                 .requestMatchers("/login/**").permitAll()
                 .requestMatchers("/oauth2/**").permitAll()
                 .requestMatchers("/auth/**").permitAll()
                 .anyRequest().authenticated()
             )
-            .headers(headers -> headers
-                .frameOptions(frame -> frame.disable())
-            )
+
             .oauth2Login(oauth2 -> oauth2
                 .userInfoEndpoint(userInfo -> userInfo
                     .userService(oAuth2UserService)
                 )
                 .successHandler(oAuth2SuccessHandler)
             )
-            .addFilterBefore(jwtAuthFilter,
-                    UsernamePasswordAuthenticationFilter.class);
+
+            .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
