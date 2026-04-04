@@ -23,6 +23,9 @@ public class QuantityMeasurementEntity {
 	@Column(name = "is_error")
 	private boolean error;
 
+	@Column
+	private String userEmail;
+
 	private String message;
 
 	@Column(name = "created_at")
@@ -42,6 +45,25 @@ public class QuantityMeasurementEntity {
 		this.message = message;
 		this.error = error;
 		this.createdAt = LocalDateTime.now();
+	}
+
+	public QuantityMeasurementEntity(String operation, String measurementType, String result, String userEmail) {
+		this.operation = operation;
+		this.measurementType = measurementType;
+		this.result = result;
+		this.error = false;
+		this.createdAt = LocalDateTime.now();
+		this.userEmail = userEmail;
+	}
+
+	public QuantityMeasurementEntity(String operation, String measurementType, String message, boolean error,
+			String userEmail) {
+		this.operation = operation;
+		this.measurementType = measurementType;
+		this.message = message;
+		this.error = error;
+		this.createdAt = LocalDateTime.now();
+		this.userEmail = userEmail;
 	}
 
 	// Default constructor required by JPA
@@ -74,6 +96,10 @@ public class QuantityMeasurementEntity {
 
 	public LocalDateTime getCreatedAt() {
 		return createdAt;
+	}
+
+	public String getUserEmail() {
+		return userEmail;
 	}
 
 	@Override
