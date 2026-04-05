@@ -163,7 +163,7 @@ mvn test -Dtest=QuantityMeasurementAppTest
 | Length | `FEET`, `INCH`, `YARDS`, `CENTIMETER` |
 | Weight | `KILOGRAM`, `GRAM`, `POUND` |
 | Volume | `LITRE`, `MILLILITRE`, `GALLON` |
-| Temperature | `CELSIUS`, `FAHRENHEIT` *(comparison & conversion only)* |
+| Temperature | `CELSIUS`, `FAHRENHEIT` |
 
 ---
 
