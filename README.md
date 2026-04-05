@@ -15,6 +15,17 @@ A Java application built using **Data Driven Testing (DDT)** that progressively 
 
 ---
 
+---
+
+## 🌐 Live Demo
+
+| Service | URL |
+|---------|-----|
+| 🖥️ Frontend | [quantitymeasurement-app.netlify.app](https://quantitymeasurement-app.netlify.app) |
+| ⚙️ Backend API | [quantitymeasurementapp-production-7653.up.railway.app](https://quantitymeasurementapp-production-7653.up.railway.app) |
+
+---
+
 ## 📖 Project Journey
 
 This project was built **use case by use case**, each one adding a new layer of functionality on top of the previous.
