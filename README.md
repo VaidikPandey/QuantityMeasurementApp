@@ -15,8 +15,6 @@ A Java application built using **Data Driven Testing (DDT)** that progressively 
 
 ---
 
----
-
 ## 🌐 Live Demo
 
 | Service | URL |
