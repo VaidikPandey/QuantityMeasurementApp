@@ -21,6 +21,7 @@ A Java application built using **Data Driven Testing (DDT)** that progressively 
 |---------|-----|
 | 🖥️ Frontend | [quantitymeasurement-app.netlify.app](https://quantitymeasurement-app.netlify.app) |
 | ⚙️ Backend API | [quantitymeasurementapp-production-7653.up.railway.app](https://quantitymeasurementapp-production-7653.up.railway.app) |
+| 🗒️ Documentation | [quantitymeasurementapp-production-7653.up.railway.app/swagger-ui/index.html](https://quantitymeasurementapp-production-7653.up.railway.app/swagger-ui/index.html) |
 
 ---
 
